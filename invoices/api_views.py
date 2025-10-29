@@ -310,6 +310,7 @@ def create_and_download_invoice(request):
         response = HttpResponse(pdf_bytes, content_type="application/pdf")
         response["Content-Disposition"] = f'attachment; filename="{invoice.invoice_no}.pdf"'
         return response
-
+    
     except Exception as e:
         return Response({"error": str(e)}, status=400)
+

@@ -15,7 +15,6 @@
       overflow: hidden;
     }
 
-    /* full-page background image (use absolute file:/// path provided by context) */
     .bg {
       position: absolute;
       left: 0;
@@ -25,49 +24,70 @@
       z-index: 0;
     }
 
-    /* overlay container for all fields */
     .overlay {
       position: absolute;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
+      inset: 0;
       z-index: 10;
       color: #000;
+      font-size: 12px; /* slightly larger */
+      font-weight: 600; /* bolder text */
+      line-height: 1.4;
     }
 
-    /* each field absolutely positioned — tweak coords to align into template boxes */
-    .field { position: absolute; white-space: pre-wrap; }
+    .field { 
+      position: absolute; 
+      white-space: pre-wrap; 
+      font-weight: 700;
+    }
 
-    /* sample positions (YOU WILL FINE-TUNE these values) */
-    .tin { left: 132mm; top: 28mm; font-weight:700; }           /* TIN box */
-    .vat-date { left: 165mm; top: 28mm; }                       /* VAT Date box */
-    .invoice-no { left: 132mm; top: 40mm; font-weight:700; }    /* Invoice No box */
-    .invoice-date { left: 165mm; top: 40mm; }                   /* Invoice Date box */
+    /* ↓↓↓ Adjusted all top positions slightly downward */
+    .tin { left: 132mm; top: 32mm; }           
+    .vat-date { left: 165mm; top: 32mm; }     
+    .invoice-no { left: 132mm; top: 44mm; }    
+    .invoice-date { left: 165mm; top: 44mm; }
 
-    .customer-name { left: 18mm; top: 52mm; font-weight:700; }
-    .customer-address { left: 18mm; top: 60mm; width: 95mm; font-size:10px; }
+    .customer-name { left: 18mm; top: 58mm; }
+    .customer-address { left: 18mm; top: 67mm; width: 95mm; font-size:11px; }
 
-    /* items table area */
-    .items { left: 16mm; top: 86mm; width: 178mm; font-size:10px; }
-    .items table { width: 100%; border-collapse: collapse; }
-    .items td { padding: 2px 4px; vertical-align: top; }
+    /* ITEMS AREA — pushed down */
+    .items {
+      position: absolute;
+      left: 16mm;
+      top: 92mm; /* was 86mm */
+      width: 178mm;
+      height: 150mm;
+      overflow: hidden;
+    }
 
-    /* totals */
-    .subtotal { left: 130mm; top: 245mm; font-weight:700; }
-    .vat { left: 130mm; top: 252mm; color: red; }
-    .total { left: 130mm; top: 259mm; color: red; font-weight:700; }
+    .items table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 11px;
+      font-weight: 600;
+    }
 
-    /* footer signatures */
-    .sign-left { left: 18mm; top: 275mm; }
-    .sign-right { left: 120mm; top: 275mm; }
+    .items td {
+      padding: 4px 5px;
+      vertical-align: middle;
+    }
+
+    .items tr:nth-child(even) { background: rgba(0,0,0,0.04); }
+
+    /* Totals section moved slightly down too */
+    .subtotal { left: 130mm; top: 249mm; font-weight:700; }
+    .vat { left: 130mm; top: 256mm; font-weight:700; color: #d00; }
+    .total { left: 130mm; top: 263mm; font-weight:900; color: #d00; font-size: 13px; }
+
+    /* footer */
+    .sign-left { left: 18mm; top: 280mm; }
+    .sign-right { left: 120mm; top: 280mm; }
   </style>
 </head>
 <body>
-  <!-- background image (absolute file path) -->
   <img class="bg" src="{{ template_image }}" />
-
   <div class="overlay">
+
     <div class="field tin">{{ tin_no }}</div>
     <div class="field vat-date">{{ vat_date }}</div>
     <div class="field invoice-no">{{ invoice_no }}</div>
@@ -78,25 +98,24 @@
 
     <div class="items">
       <table>
-        {% for it in items %}
-        <tr>
-          <td style="width:6%;">{{ it.sn }}</td>
-          <td style="width:48%; text-align:left;">{{ it.description }}</td>
-          <td style="width:14%;">{{ it.unit }}</td>
-          <td style="width:8%; text-align:right;">{{ it.qty }}</td>
-          <td style="width:12%; text-align:right;">{{ it.rate|floatformat:2 }}</td>
-          <td style="width:12%; text-align:right;">{{ it.amount|floatformat:2 }}</td>
-        </tr>
-        {% endfor %}
+        <tbody>
+          {% for it in items %}
+          <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ it.description }}</td>
+            <td>{{ it.unit }}</td>
+            <td style="text-align:right;">{{ it.qty }}</td>
+            <td style="text-align:right;">{{ it.rate|floatformat:2 }}</td>
+            <td style="text-align:right;">{{ it.amount|floatformat:2 }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
       </table>
     </div>
 
     <div class="field subtotal">₦{{ subtotal|floatformat:2 }}</div>
     <div class="field vat">₦{{ vat|floatformat:2 }}</div>
     <div class="field total">₦{{ total|floatformat:2 }}</div>
-
-    <div class="field sign-left sign-left">for Isnad Technical Services Limited</div>
-    <div class="field sign-right sign-right">Customer's Signature</div>
   </div>
 </body>
 </html>
