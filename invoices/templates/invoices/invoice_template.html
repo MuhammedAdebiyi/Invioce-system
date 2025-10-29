@@ -29,59 +29,53 @@
       inset: 0;
       z-index: 10;
       color: #000;
-      font-size: 12px; /* slightly larger */
-      font-weight: 600; /* bolder text */
-      line-height: 1.4;
     }
 
-    .field { 
-      position: absolute; 
-      white-space: pre-wrap; 
-      font-weight: 700;
-    }
+    .field { position: absolute; white-space: pre-wrap; font-weight: 800; font-size: 13px; }
 
-    /* ↓↓↓ Adjusted all top positions slightly downward */
-    .tin { left: 132mm; top: 32mm; }           
-    .vat-date { left: 165mm; top: 32mm; }     
-    .invoice-no { left: 132mm; top: 44mm; }    
-    .invoice-date { left: 165mm; top: 44mm; }
+    /* Adjust positions */
+    .tin { left: 132mm; top: 38mm; }
+    .vat-date { left: 165mm; top: 38mm; }
+    .invoice-no { left: 132mm; top: 50mm; }
+    .invoice-date { left: 165mm; top: 50mm; }
 
-    .customer-name { left: 18mm; top: 58mm; }
-    .customer-address { left: 18mm; top: 67mm; width: 95mm; font-size:11px; }
+    .customer-name { left: 18mm; top: 66mm; font-weight: 700; }
+    .customer-address { left: 18mm; top: 75mm; width: 95mm; font-size:12px; }
 
-    /* ITEMS AREA — pushed down */
+    /* Items table container */
     .items {
       position: absolute;
       left: 16mm;
-      top: 92mm; /* was 86mm */
+      top: 100mm;
       width: 178mm;
-      height: 150mm;
-      overflow: hidden;
+      height: 145mm;   /* max height */
+      overflow: hidden; /* prevent spill */
     }
 
     .items table {
       width: 100%;
       border-collapse: collapse;
       table-layout: fixed;
-      font-size: 11px;
-      font-weight: 600;
+      font-size: 12px;
+      font-weight: 700;
     }
 
     .items td {
-      padding: 4px 5px;
-      vertical-align: middle;
+      padding: 4px 6px;
+      vertical-align: top;
+      word-wrap: break-word;
     }
 
-    .items tr:nth-child(even) { background: rgba(0,0,0,0.04); }
+    .items tr:nth-child(even) { background: rgba(0,0,0,0.03); }
 
-    /* Totals section moved slightly down too */
-    .subtotal { left: 130mm; top: 249mm; font-weight:700; }
-    .vat { left: 130mm; top: 256mm; font-weight:700; color: #d00; }
-    .total { left: 130mm; top: 263mm; font-weight:900; color: #d00; font-size: 13px; }
+    /* totals */
+    .subtotal { left: 130mm; top: 255mm; font-weight:800; font-size:12px; }
+    .vat { left: 130mm; top: 262mm; font-weight:800; color: #d00; }
+    .total { left: 130mm; top: 269mm; font-weight:900; color: #d00; font-size:14px; }
 
-    /* footer */
-    .sign-left { left: 18mm; top: 280mm; }
-    .sign-right { left: 120mm; top: 280mm; }
+    /* footer signatures */
+    .sign-left { left: 18mm; top: 283mm; }
+    .sign-right { left: 120mm; top: 283mm; }
   </style>
 </head>
 <body>
@@ -101,12 +95,12 @@
         <tbody>
           {% for it in items %}
           <tr>
-            <td>{{ forloop.counter }}</td>
-            <td>{{ it.description }}</td>
-            <td>{{ it.unit }}</td>
-            <td style="text-align:right;">{{ it.qty }}</td>
-            <td style="text-align:right;">{{ it.rate|floatformat:2 }}</td>
-            <td style="text-align:right;">{{ it.amount|floatformat:2 }}</td>
+            <td style="width:6%;">{{ forloop.counter }}</td>
+            <td style="width:48%; text-align:left;">{{ it.description }}</td>
+            <td style="width:14%; text-align:left;">{{ it.unit }}</td>
+            <td style="width:8%; text-align:right;">{{ it.qty }}</td>
+            <td style="width:12%; text-align:right;">{{ it.rate|floatformat:2 }}</td>
+            <td style="width:12%; text-align:right;">{{ it.amount|floatformat:2 }}</td>
           </tr>
           {% endfor %}
         </tbody>
